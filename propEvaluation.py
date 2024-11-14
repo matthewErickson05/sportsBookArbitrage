@@ -12,34 +12,38 @@ def EvaluateLine(ppline, sbline, overPrice, underPrice) :
     lineDiff = ppline - sbline
     if (abs(lineDiff) < 1) :
         lineDiff = 0
+    lineDiff = (lineDiff / ppline) * 100
+    #print("Line Difference after computation is" + str(lineDiff))
+    standardUnit = 1 / 100
     if (overPrice < underPrice) :
         ##Over is favorited, 
-        if (lineDiff > 0) :
+        if (lineDiff < 0) :
             #The bet is looking good
-            powerRanking = lineDiff * abs(overPrice)
-        elif (lineDiff < 0) :
+            powerRanking = abs(lineDiff) * abs(overPrice)
+        elif (lineDiff > 0) :
             #The bet is looking bad
             powerRanking = 0
         elif (lineDiff == 0) :
             #The bet is favored as much as the sportsbook says
-            powerRanking = abs(overPrice)
+            powerRanking = standardUnit * abs(overPrice)
     elif (overPrice > underPrice) :
         #Under if favored
-        if (lineDiff < 0) :
-            powerRanking = lineDiff * abs(underPrice)
-        elif (lineDiff > 0) :
+        if (lineDiff > 0) :
+            powerRanking = -1 * lineDiff * abs(underPrice)
+        elif (lineDiff < 0) :
             #Bet is looking bad
             powerRanking = 0
         elif (lineDiff == 0) :
-            powerRanking = underPrice
+            powerRanking = standardUnit * underPrice
     else :
         ##line is even, see if there is a discrepency in pp vs. book
         if (lineDiff > 0) :
-            powerRanking = lineDiff * 100
+            powerRanking = -1 * lineDiff * 100
         elif (lineDiff < 0) :
-            powerRanking = lineDiff * 100
+            powerRanking = -1 * lineDiff * 100
         else :
             powerRanking = 0
     return powerRanking
 
-print(EvaluateLine(225.5, 227.5, -110, -100))
+#Now that we have a method for comparing lines, we need to build a system with the api so that we can automate the search.
+#To do this we need to get the API working for the sportsbook.
