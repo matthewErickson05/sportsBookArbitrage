@@ -48,4 +48,5 @@ for d in response['data']:
 
 
 df = pd.DataFrame(data)
+#df.to_csv("11/14/2024 - Prizepicks lines.csv")
 print(df)
